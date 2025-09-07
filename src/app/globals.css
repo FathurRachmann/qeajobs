@@ -39,12 +39,12 @@ body {
 
 /* Custom Button Glow Effect */
 .glow-button {
-    box-shadow: 0 0 5px theme('colors.purple.500'), 0 0 10px theme('colors.purple.600');
+    box-shadow: 0 0 5px #a855f7, 0 0 10px #9333ea; /* Replaced theme() with hex codes */
     transition: all 0.3s ease-in-out;
 }
 
 .glow-button:hover {
-    box-shadow: 0 0 10px theme('colors.pink.500'), 0 0 20px theme('colors.pink.600');
+    box-shadow: 0 0 10px #ec4899, 0 0 20px #db2777; /* Replaced theme() with hex codes */
 }
 
 /* Ant Design Component Overrides */

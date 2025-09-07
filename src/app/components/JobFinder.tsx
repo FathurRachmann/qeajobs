@@ -4,27 +4,40 @@ import { useState } from 'react';
 import { getJobs } from '../actions';
 import JobCard from './JobCard';
 import { Form, Input, Select, InputNumber, Checkbox, Button, Row, Col, Spin, Empty, Card } from 'antd';
-import { UserOutlined, CodeOutlined, BankOutlined, AppstoreOutlined, MoneyCollectOutlined } from '@ant-design/icons';
+import { UserOutlined, CodeOutlined, BankOutlined, MoneyCollectOutlined } from '@ant-design/icons';
+import { Job } from '../lib/types';
 
 const { Option } = Select;
 
+// Define a type for the form values to avoid using 'any'
+interface FormValues {
+  qualifications: string;
+  major?: string;
+  aspirations?: string;
+  workType: 'any' | 'Remote' | 'Hybrid' | 'On-site';
+  salary?: number;
+  flexibleHours: boolean;
+}
+
 export default function JobFinder() {
-  const [jobs, setJobs] = useState<any[] | null>(null);
+  const [jobs, setJobs] = useState<Job[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [form] = Form.useForm();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: FormValues) => {
     setLoading(true);
     setSearched(false);
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     const formData = new FormData();
-    for (const key in values) {
-        if (values[key] !== undefined && values[key] !== null) {
-            formData.append(key, values[key]);
-        }
-    }
+    // Loop over the values and append them to formData
+    (Object.keys(values) as Array<keyof FormValues>).forEach((key) => {
+      const value = values[key];
+      if (value !== undefined && value !== null) {
+        formData.append(key, String(value));
+      }
+    });
     
     const recommendedJobs = await getJobs(formData);
     setJobs(recommendedJobs);

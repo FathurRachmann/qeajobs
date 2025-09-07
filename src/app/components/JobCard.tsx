@@ -2,6 +2,7 @@
 
 import { Tag, Progress, Tooltip } from 'antd';
 import { GlobalOutlined, DollarCircleOutlined, ClockCircleOutlined, ThunderboltFilled, StarFilled } from '@ant-design/icons';
+import { Job } from '../lib/types';
 
 const InfoPill = ({ icon, text, tooltip }: { icon: React.ReactNode; text: string | number; tooltip: string }) => (
     <Tooltip title={tooltip}>
@@ -12,12 +13,12 @@ const InfoPill = ({ icon, text, tooltip }: { icon: React.ReactNode; text: string
     </Tooltip>
 );
 
-const JobCard = ({ job }: { job: any }) => {
+const JobCard = ({ job }: { job: Job }) => {
     const skills = [...new Set([
         job.requiredSkills_1, job.requiredSkills_2, job.requiredSkills_3
-    ].filter(Boolean).flatMap(s => s.split(',').map((sk: string) => sk.trim())))];
+    ].filter(Boolean).flatMap(s => s ? s.split(',').map((sk: string) => sk.trim()) : []))];
 
-    const formatSalary = (salary: number) => {
+    const formatSalary = (salary?: number) => {
         if (!salary) return 'N/A';
         return new Intl.NumberFormat('id-ID', { notation: 'compact', maximumFractionDigits: 1 }).format(salary);
     };

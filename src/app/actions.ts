@@ -1,8 +1,9 @@
 'use server';
 
 import { supabase } from '../lib/supabase';
+import { Job } from './lib/types';
 
-export async function getJobs(formData: FormData) {
+export async function getJobs(formData: FormData): Promise<Job[]> {
     console.log('Mulai analisis dengan 6 faktor...');
 
     // Ambil data dari formulir, termasuk jurusan
@@ -15,7 +16,8 @@ export async function getJobs(formData: FormData) {
 
     console.log('Input Pengguna:', { qualifications, aspirations, major, workType, desiredSalary, wantsFlexibleHours });
 
-    const { data: jobs, error } = await supabase.from('jobs').select('*');
+    // Directly type the response from Supabase
+    const { data: jobs, error } = await supabase.from('jobs').select('*').returns<Job[]>();
 
     if (error) {
         console.error('Error fetching jobs:', error);
@@ -28,13 +30,13 @@ export async function getJobs(formData: FormData) {
 
     console.log(`Ditemukan ${jobs.length} pekerjaan. Mulai menghitung skor...`);
 
-    const recommendedJobs = jobs.map((job: { requiredSkills_1: any; requiredSkills_2: any; requiredSkills_3: any; requiredSkills_4: any; relatedMajors_1: any; relatedMajors_2: any; relatedMajors_3: any; relatedMajors_4: any; description: string; workType: string; salary: number; flexibleHours: any; }) => {
+    const recommendedJobs = jobs.map((job: Job) => {
         let matchScore = 0;
 
         // Faktor 1: Keahlian (Bobot 35%)
-        const jobSkills = [job.requiredSkills_1, job.requiredSkills_2, job.requiredSkills_3, job.requiredSkills_4]
+        const jobSkills = [job.requiredSkills_1, job.requiredSkills_2, job.requiredSkills_3]
             .filter(s => typeof s === 'string' && s)
-            .flatMap(s => s.split(',').map((skill: string) => skill.trim().toLowerCase()));
+            .flatMap(s => s ? s.split(',').map((skill: string) => skill.trim().toLowerCase()) : []);
         if (jobSkills.length > 0) {
             const userSkills = qualifications.toLowerCase().split(',').map(s => s.trim());
             const matchedSkills = new Set(jobSkills.filter(skill => userSkills.includes(skill)));
@@ -42,13 +44,9 @@ export async function getJobs(formData: FormData) {
         }
 
         // Faktor 2: Jurusan (Bobot 25%)
-        const jobMajors = [job.relatedMajors_1, job.relatedMajors_2, job.relatedMajors_3, job.relatedMajors_4]
-            .filter(m => typeof m === 'string' && m)
-            .map(m => m.trim().toLowerCase());
-        if (jobMajors.length > 0 && major) {
-            const userMajor = major.toLowerCase().trim();
-            if (jobMajors.includes(userMajor)) {
-                matchScore += 25; // Skor penuh jika jurusan cocok
+        if (major && job.description) { 
+            if(job.description.toLowerCase().includes(major.toLowerCase().trim())){
+                matchScore += 25;
             }
         }
 
@@ -98,8 +96,8 @@ export async function getJobs(formData: FormData) {
 
     // Saring pekerjaan dengan skor di atas ambang batas dan urutkan
     const finalJobs = recommendedJobs
-        .filter((job: { matchScore: number; }) => job.matchScore > 20)
-        .sort((a: { matchScore: number; }, b: { matchScore: number; }) => b.matchScore - a.matchScore);
+        .filter((job) => job.matchScore > 20)
+        .sort((a, b) => b.matchScore - a.matchScore);
     
     console.log(`Menyortir dan mengembalikan ${finalJobs.length} pekerjaan yang direkomendasikan.`);
 
