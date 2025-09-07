@@ -1,37 +1,27 @@
-'use client';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-import { useState, type ReactNode } from 'react';
-import { Inter } from 'next/font/google';
-import { ConfigProvider, theme } from 'antd';
-import { StyleProvider, createCache, extractStyle } from '@ant-design/cssinjs';
-import { useServerInsertedHTML } from 'next/navigation';
-import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
-const AntdRegistry = ({ children }: { children: ReactNode }) => {
-  const [cache] = useState(() => createCache());
-
-  useServerInsertedHTML(() => (
-    <style id="antd" dangerouslySetInnerHTML={{ __html: extractStyle(cache, true) }} />
-  ));
-
-  return <StyleProvider cache={cache}>{children}</StyleProvider>;
+export const metadata: Metadata = {
+  title: "Job Finder AI",
+  description: "Temukan pekerjaan impian Anda dengan bantuan AI.",
 };
 
-export default function RootLayout({ children }: { readonly children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AntdRegistry>
-          <ConfigProvider
-            theme={{
-              algorithm: theme.darkAlgorithm,
-            }}
-          >
+    <html lang="id" className="h-full bg-gray-50 antialiased">
+      <body className={`${inter.className} flex min-h-full flex-col`}>
+        <main className="flex-auto">
             {children}
-          </ConfigProvider>
-        </AntdRegistry>
+        </main>
+      
       </body>
     </html>
   );

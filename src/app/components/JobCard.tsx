@@ -1,80 +1,115 @@
 'use client';
 
-import { Tag, Progress, Tooltip } from 'antd';
-import { GlobalOutlined, DollarCircleOutlined, ClockCircleOutlined, ThunderboltFilled, StarFilled } from '@ant-design/icons';
+import { Tag, Progress } from 'antd';
+import { 
+    GlobalOutlined, 
+    DollarCircleOutlined, 
+    ThunderboltFilled, 
+    BankOutlined,
+    RocketOutlined,
+    TrophyOutlined,
+    SmileOutlined,
+    TeamOutlined,
+    BookOutlined,
+    UsergroupAddOutlined,
+    StarFilled
+} from '@ant-design/icons';
 import { Job } from '../lib/types';
 
-const InfoPill = ({ icon, text, tooltip }: { icon: React.ReactNode; text: string | number; tooltip: string }) => (
-    <Tooltip title={tooltip}>
-        <div className="flex items-center gap-2 text-gray-300 bg-slate-900/50 px-3 py-1.5 rounded-full text-xs">
+const CardSection = ({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) => (
+    <div className="mb-4 last:mb-0">
+        <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700 uppercase tracking-wider">
             {icon}
-            <span className="font-semibold">{text}</span>
-        </div>
-    </Tooltip>
+            {title}
+        </h4>
+        <div className="pl-6 text-gray-600">{children}</div>
+    </div>
 );
 
 const JobCard = ({ job }: { job: Job }) => {
-    const skills = [...new Set([
-        job.requiredSkills_1, job.requiredSkills_2, job.requiredSkills_3
-    ].filter(Boolean).flatMap(s => s ? s.split(',').map((sk: string) => sk.trim()) : []))];
+    const benefits = [job.benefits_1, job.benefits_2, job.benefits_3].filter(Boolean) as string[];
+    const skills = [job.requiredSkills_1, job.requiredSkills_2, job.requiredSkills_3, job.requiredSkills_4].filter(Boolean) as string[];
 
-    const formatSalary = (salary?: number) => {
-        if (!salary) return 'N/A';
-        return new Intl.NumberFormat('id-ID', { notation: 'compact', maximumFractionDigits: 1 }).format(salary);
+    const formatSalary = (salary: number) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(salary);
     };
 
-    const getVibe = (score: number) => {
-        if (score > 85) return { text: 'Vibe Check: Sempurna!', color: '#23b26d', gradient: 'from-green-400 to-cyan-400' };
-        if (score > 70) return { text: 'Vibe Check: Cocok Banget', color: '#00b4d8', gradient: 'from-cyan-400 to-blue-400' };
-        if (score > 50) return { text: 'Vibe Check: Boleh Dicoba', color: '#ffc107', gradient: 'from-yellow-400 to-orange-400' };
-        return { text: 'Vibe Check: Kurang Pas', color: '#ff4d4f', gradient: 'from-pink-500 to-red-500' };
-    };
+    const matchScore = Math.round(job.matchScore);
 
-    const vibe = getVibe(job.matchScore);
+    const getProgressColor = (score: number) => {
+        if (score > 85) return { from: '#10b981', to: '#34d399' }; // Green
+        if (score > 70) return { from: '#f59e0b', to: '#fbbf24' }; // Amber
+        return { from: '#ef4444', to: '#f87171' }; // Red
+    }
 
     return (
-        <div className="glassmorphism flex flex-col h-full group transition-all duration-300 hover:border-purple-500/80 hover:shadow-2xl hover:shadow-purple-800/20">
+        <div className="bg-white rounded-xl shadow-lg h-full flex flex-col transition-all duration-300 hover:scale-[1.02] hover:shadow-xl border border-gray-200">
             {/* Header */}
-            <div className="p-6 border-b-2 border-slate-700/50">
-                <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors duration-300 leading-tight">{job.title}</h3>
-                <p className="text-md text-gray-400 mt-1">{job.company}</p>
+            <div className="px-6 py-5 border-b border-gray-200">
+                <h3 className="text-xl font-bold text-gray-900 leading-tight">{job.title}</h3>
+                <p className="text-base text-gray-700 mt-1">{job.company}</p>
+                <div className="flex items-center text-sm text-gray-500 mt-2 gap-4">
+                    <span className="flex items-center gap-1.5"><BankOutlined /> {job.location}</span>
+                    <span className="flex items-center gap-1.5"><GlobalOutlined /> {job.workType}</span>
+                </div>
             </div>
 
             {/* Main Content */}
-            <div className="p-6 flex-grow flex flex-col gap-y-5">
-                {/* Quick Info Pills */}
-                <div className="flex flex-wrap gap-2">
-                    <InfoPill icon={<GlobalOutlined />} text={job.workType || 'N/A'} tooltip="Tipe Pekerjaan" />
-                    <InfoPill icon={<DollarCircleOutlined />} text={formatSalary(job.salary)} tooltip="Gaji" />
-                    {job.flexibleHours && <InfoPill icon={<ClockCircleOutlined />} text="Fleksibel" tooltip="Jam Kerja" />}
-                </div>
+            <div className="flex-grow p-6 space-y-5">
+                {skills.length > 0 && (
+                    <CardSection title="Skill Utama" icon={<ThunderboltFilled className="text-orange-500" />}>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.map((skill, index) => (
+                                <Tag key={index} className="bg-orange-50 text-orange-800 border-none px-3 py-1 text-xs rounded-full">{skill}</Tag>
+                            ))}
+                        </div>
+                    </CardSection>
+                )}
 
-                {/* Description */}
-                <p className="text-gray-400 text-sm leading-relaxed h-24 overflow-auto flex-grow">
-                    {job.description}
-                </p>
+                {benefits.length > 0 && (
+                    <CardSection title="Benefit Unggulan" icon={<TrophyOutlined className="text-green-500" />}>
+                        <div className="flex flex-wrap gap-2">
+                             {benefits.map((benefit, index) => (
+                                <Tag key={index} className="bg-green-50 text-green-800 border-none px-3 py-1 text-xs rounded-full">{benefit}</Tag>
+                            ))}
+                        </div>
+                    </CardSection>
+                )}
 
-                {/* Core Skills */}
-                <div>
-                    <h4 className="font-semibold text-gray-300 mb-3 flex items-center gap-2"><ThunderboltFilled className="text-yellow-400" /> Skill Utama</h4>
-                    <div className="flex flex-wrap gap-2">
-                        {skills.slice(0, 4).map((skill: string, index: number) => (
-                            <Tag key={index} color="blue" className="bg-blue-900/70 border-blue-700 text-blue-300">{skill}</Tag>
-                        ))}
+                {job.careerPath_nextRole && (
+                     <CardSection title="Jenjang Karier" icon={<RocketOutlined className="text-blue-500" />}>
+                        <p className='text-gray-600'>Peran selanjutnya: <strong className="text-gray-800">{job.careerPath_nextRole}</strong> ({job.careerPath_timeframe})</p>
+                    </CardSection>
+                )}
+                
+                 <CardSection title="Kultur & Lingkungan" icon={<SmileOutlined className="text-purple-500" />}>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                        {job.hasMentorship && <div className="flex items-center gap-2"><TeamOutlined /> Mentorship</div>}
+                        {job.learningPrograms && <div className="flex items-center gap-2"><BookOutlined /> Program Belajar</div>}
+                        {job.flexibleHours && <div className="flex items-center gap-2"><SmileOutlined /> Jam Fleksibel</div>}
+                        {job.agePreference_1 && <div className="flex items-center gap-2"><UsergroupAddOutlined /> Usia: {job.agePreference_1}-{job.agePreference_2}</div>}
                     </div>
-                </div>
+                 </CardSection>
             </div>
 
-            {/* Footer - Vibe Meter */}
-            <div className="p-6 border-t-2 border-slate-700/50 mt-auto">
-                 <div className="flex justify-between items-center mb-1.5">
-                    <p className={`text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r ${vibe.gradient}`}>{vibe.text}</p>
-                    <p className="font-bold text-lg flex items-center gap-1.5" style={{color: vibe.color}}>
-                        <StarFilled />
-                        {Math.round(job.matchScore)}
+            {/* Footer - Match Score */}
+            <div className="mt-auto px-6 py-4 bg-gray-50 rounded-b-xl border-t border-gray-200">
+                 <div className="flex justify-between items-center">
+                    <p className="text-sm font-semibold text-gray-800 flex items-center gap-1.5">
+                        <StarFilled className="text-yellow-500"/>
+                        Skor Kecocokan
+                    </p>
+                    <p className="font-bold text-2xl text-orange-600">
+                        {matchScore}
                     </p>
                 </div>
-                <Progress percent={Math.round(job.matchScore)} showInfo={false} strokeColor={vibe.color} trailColor="rgba(255,255,255,0.1)" size="small" />
+                <Progress 
+                    percent={matchScore} 
+                    showInfo={false} 
+                    size="small" 
+                    className="mt-2" 
+                    strokeColor={getProgressColor(matchScore)}
+                />
             </div>
         </div>
     );

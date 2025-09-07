@@ -1,78 +1,65 @@
-@import 'antd/dist/reset.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --foreground-rgb: 45, 45, 45;
+  --background-start-rgb: 248, 248, 250;
+  --background-end-rgb: 255, 255, 255;
+  --accent-blue: 0, 113, 227;
+}
+
 body {
-  color: #e5e7eb; /* Light Gray */
-  background-color: #0b0f19; /* Dark blue-slate */
-  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
-  background-size: 2rem 2rem;
-  min-height: 100vh;
-  overflow-y: scroll;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Custom Scrollbar for Webkit browsers */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0b0f19;
-}
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.apple-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+    padding: 20px;
+    margin-bottom: 24px;
 }
 
-/* Glassmorphism utility class */
-.glassmorphism {
-    background: rgba(17, 25, 40, 0.75);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.125);
+.apple-button {
+    background-color: rgb(var(--accent-blue));
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 12px 24px;
+    transition: background-color 0.2s ease;
 }
 
-/* Custom Button Glow Effect */
-.glow-button {
-    box-shadow: 0 0 5px #a855f7, 0 0 10px #9333ea; /* Replaced theme() with hex codes */
-    transition: all 0.3s ease-in-out;
-}
-
-.glow-button:hover {
-    box-shadow: 0 0 10px #ec4899, 0 0 20px #db2777; /* Replaced theme() with hex codes */
-}
-
-/* Ant Design Component Overrides */
+/* Ant Design Overrides */
 .ant-form-item-label > label {
-  color: #d1d5db !important; /* Lighter text for labels */
-  font-weight: 500 !important;
+    font-weight: 600 !important;
+    color: #333 !important;
 }
 
 .ant-input, .ant-select-selector, .ant-input-number {
-  background-color: #1f2937 !important;
-  border-color: #4b5563 !important;
-  color: #f3f4f6 !important;
+    border-radius: 8px !important;
+    border: 1px solid #d9d9d9 !important;
+    padding: 10px !important;
 }
 
-.ant-select-dropdown {
-    background-color: #1f2937 !important;
-    border-color: #4b5563 !important;
+.ant-input:focus, .ant-select-focused .ant-select-selector {
+    border-color: rgb(var(--accent-blue)) !important;
+    box-shadow: 0 0 0 2px rgba(var(--accent-blue), 0.2) !important;
 }
 
-.ant-select-item-option-content {
-    color: #d1d5db !important;
+.ant-slider-track {
+    background-color: rgb(var(--accent-blue)) !important;
 }
 
-.ant-select-item-option-active {
-    background-color: #374151 !important;
-}
-
-.ant-checkbox-inner {
-    background-color: #1f2937 !important;
-    border-color: #4b5563 !important;
+.ant-slider-handle {
+    border: solid 2px rgb(var(--accent-blue)) !important;
 }

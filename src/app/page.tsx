@@ -2,20 +2,21 @@ import JobFinder from './components/JobFinder';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start p-6 sm:p-8 md:p-12">
-      <div className="relative flex place-items-center mb-12 md:mb-16 text-center z-10">
-        <div className="flex flex-col items-center">
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tighter text-balance">
-              Let&apos;s Find Your
-              <span className="block mt-1 md:mt-2 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">Dream Job</span>
-            </h1>
-            <p className="mt-4 text-lg text-gray-400 max-w-2xl text-balance">
-             Bukan cuma pekerjaan. Temukan tempat di mana Anda bisa berkembang, berinovasi, dan menjadi diri sendiri. Cukup ceritakan passion Anda, kami urus sisanya.
-            </p>
+    <div className="bg-white">
+      <div id="job-finder" className="py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-base font-semibold leading-7 text-orange-600">Mulai Perjalanan Karier Anda</h2>
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Temukan Jodoh Karier Anda</p>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Isi formulir di bawah ini dengan preferensi Anda. AI kami akan menganalisis profil Anda untuk menemukan peluang kerja yang paling cocok.
+              </p>
+            </div>
+            <div className="mt-16">
+              <JobFinder />
+           </div>
         </div>
       </div>
-
-      <JobFinder />
-    </main>
+    </div>
   );
 }
