@@ -1,26 +1,78 @@
-@import "tailwindcss";
+@import 'antd/dist/reset.css';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #e5e7eb; /* Light Gray */
+  background-color: #0b0f19; /* Dark blue-slate */
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background-size: 2rem 2rem;
+  min-height: 100vh;
+  overflow-y: scroll;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Glassmorphism utility class */
+.glassmorphism {
+    background: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+/* Custom Button Glow Effect */
+.glow-button {
+    box-shadow: 0 0 5px theme('colors.purple.500'), 0 0 10px theme('colors.purple.600');
+    transition: all 0.3s ease-in-out;
+}
+
+.glow-button:hover {
+    box-shadow: 0 0 10px theme('colors.pink.500'), 0 0 20px theme('colors.pink.600');
+}
+
+/* Ant Design Component Overrides */
+.ant-form-item-label > label {
+  color: #d1d5db !important; /* Lighter text for labels */
+  font-weight: 500 !important;
+}
+
+.ant-input, .ant-select-selector, .ant-input-number {
+  background-color: #1f2937 !important;
+  border-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
+
+.ant-select-dropdown {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+}
+
+.ant-select-item-option-content {
+    color: #d1d5db !important;
+}
+
+.ant-select-item-option-active {
+    background-color: #374151 !important;
+}
+
+.ant-checkbox-inner {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
 }
